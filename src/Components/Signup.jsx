@@ -23,8 +23,11 @@ const Signup = () => {
 
   return (
     <div className="signin">
+      <div className="headerpart">
+        <h1>Signup </h1>
+        <p>Welcome to our site. Please enter your details</p>
+      </div>
       <form onSubmit={signup}>
-        <h1>Signup</h1>
         <input
           type="email"
           placeholder="Enter Email"
@@ -33,7 +36,9 @@ const Signup = () => {
           onChange={(e) => {
             setEmail(e.target.value);
           }}
+          style={{ width: "350px", marginBottom: "10px" }}
         />
+        <br />
         <input
           type="password"
           placeholder="Password"
@@ -42,18 +47,20 @@ const Signup = () => {
           onChange={(e) => {
             Setpassword(e.target.value);
           }}
+          style={{ width: "350px", marginBottom: "10px" }}
         />
-
-        <button type="submit">Sign up</button>
+        <br />
+        <button type="submit" style={{ width: "350px", marginBottom: "10px" }}>
+          Sign up
+        </button>
         <h4>{error ? <p>{error}</p> : null}</h4>
 
         <div>
-           {user ? (
+          {user ? (
             <>
               <h1>Welcome {user.email}</h1> <br />
             </>
-          ) 
-          : null}
+          ) : null}
         </div>
       </form>
     </div>

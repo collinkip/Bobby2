@@ -1,29 +1,50 @@
 import React, { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
 import { db } from "../firebaseconfig";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, doc, updateDoc,onSnapshot } from "firebase/firestore";
+import { FaTrash } from "react-icons/fa";
 
 const Home = () => {
   const [userData, setUserData] = useState([]);
-  
-  useEffect(() => {
-    getData();
-  }, []);
+  const [loading, setLoading] = useState(true);
+  const auth = getAuth();
+  const userId = auth.currentUser ? auth.currentUser.uid : null;
+  const [stolenCards, setStolenCards] = useState([]);
 
-  const getData = async () => {
+  const markStolen = async (id) => {
     try {
-      const querySnapshot = await getDocs(collection(db, "UserProfile"));
-      const userDataArray = [];
-      querySnapshot.forEach((doc) => {
-        userDataArray.push({ id: doc.id, ...doc.data() });
+      setLoading(true);
+      const docRef = doc(db, "UserProfile", id);
+      await updateDoc(docRef, {
+        isStolen: true,
       });
-      setUserData(userDataArray);
+      setStolenCards([...stolenCards, id]);
+      console.log("Device marked as stolen successfully");
+      setLoading(false);
     } catch (error) {
-      console.error("Error getting data: ", error);
+      console.error("Error marking device as stolen: ", error);
+      setLoading(false);
     }
   };
 
-  const auth = getAuth();
+  useEffect(() => {
+    if (userId) {
+      const unsubscribe = onSnapshot(collection(db, "UserProfile"), (snapshot) => {
+        const userDataArray = [];
+        snapshot.forEach((doc) => {
+          const data = { id: doc.id, ...doc.data() };
+          if (data.id === userId) {
+            userDataArray.push(data);
+          }
+        });
+        setUserData(userDataArray);
+        setLoading(false);
+      });
+
+      return () => unsubscribe(); 
+    }
+  }, [userId]);
+
   const signout = () => {
     auth
       .signOut()
@@ -36,47 +57,63 @@ const Home = () => {
   };
 
   return (
-    <div>
-      <button onClick={signout}>Sign out</button>
+    <div style={{ textAlign: "center" }}>
+      <button style={{ margin: "20px auto" }} onClick={signout}>
+        Sign out
+      </button>
+      {/* <img src={`https://api.multiavatar.com/${userId}.svg`} alt="" /> */}
       <h3>My Devices</h3>
-      <table style={{ borderCollapse: 'collapse', padding:'32px'}}>
-        <thead>
-          <tr style={{ backgroundColor: '#f2f2f2', fontWeight: 'bold' }}>
-            <th>ID</th>
-            <th>Brand</th>
-            <th>Phone Model</th>
-            <th>Processor</th>
-            <th>Serial Number</th>
-            <th>IMEI 1</th>
-            <th>IMEI 2</th>
-            <th>Username</th>
-            <th>Email Address</th>
-            <th>Full Name</th>
-            <th>Phone Number</th>
-          </tr>
-        </thead>
-        <tbody>
-          {userData.map((user, index) => (
-            <tr key={user.id} style={{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f2f2f2', borderBottom: '1px solid #ddd' }}>
-              <td>{user.id}</td>
-              <td>{user.Brand}</td>
-              <td>{user.PhoneModel}</td>
-              <td>{user.Processor}</td>
-              <td>{user.SerialNumber}</td>
-              <td>{user.imei1}</td>
-              <td>{user.imei2}</td>
-              <td>{user.username}</td>
-              <td>{user.emailaddress}</td>
-              <td>{user.fullname}</td>
-              <td>{user.phonenumber}</td>
-            </tr>
+
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+          }}
+        >
+          {userData.map((user) => (
+            <article className="card" key={user.id}>
+              <div>
+                <h2>Brand: {user.Brand}</h2>
+                <p>Sim 1 Imei: {user.imei1}</p>
+                <p>Sim 2 Imei: {user.imei2}</p>
+                <p>Serial Number: 1234567890</p>
+                <p>Processor: {user.Processor}</p>
+                <p>Phones Model Number: {user.PhoneModel}</p>
+                <p>{user.isStolen ? <h2>Stolen</h2> : <h2>Not Stolen</h2>}</p>
+                <div>
+                  {user.isStolen ? (
+                    <></>
+                  ) : (
+                    <button
+                      onClick={markStolen.bind(this, user.id)}
+                      type="button"
+                      style={{ marginRight: "10px" }}
+                    >
+                      Stolen
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    className="delete"
+                    style={{
+                      background: "red",
+                      boxShadow: "rgba(205, 70, 63, 0.5) 0 1px 30px",
+                    }}
+                  >
+                    <FaTrash /> Delete
+                  </button>
+                </div>
+              </div>
+            </article>
           ))}
-        </tbody>
-      </table>
+        </div>
+      )}
     </div>
   );
-  
-  
 };
 
 export default Home;

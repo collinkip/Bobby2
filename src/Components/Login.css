@@ -1,0 +1,14 @@
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  input {
+    width: 350px; /* Adjust as needed */
+    margin-bottom: 10px; /* Add some vertical spacing between inputs */
+  }
+  
+  button {
+    width: 350px; /* Set button width same as input */
+  }

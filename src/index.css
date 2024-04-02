@@ -1,13 +1,33 @@
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+@font-face {
+  font-family: 'Rubik';
+  src: url('/src/fonts/Rubik-Black.ttf') format('ttf'),
+       url('/src/fonts/Rubik-Regular.ttf') format('woff'),
+       /* Add more font formats if necessary */
+}
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: 'Rubik', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: white;
+  margin: auto; /* Center horizontally */
+}
+
+@media (max-width: 768px) {
+  body {
+    width: 100vw;
+  }
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+root{
+  width: 70vw;
+  background-color: #0e083576;
+
 }
