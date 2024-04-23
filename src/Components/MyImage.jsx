@@ -1,8 +1,17 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useState } from "react";
 import nobg from "../Assets/nobg.png";
-import { auth,db } from "../firebaseconfig";
+import { db } from "../firebaseconfig";
+import { getAuth } from "firebase/auth";
+import { collection, onSnapshot } from "firebase/firestore";
+import Home from "./Home";
 
 const MyImage = () => {
+  const [isScrolledUp, setIsScrolledUp] = useState(false);
+  const [userData, setUserData] = useState(['']);
+  const [loading, setLoading] = useState(true);
+  const auth = getAuth();
+  const userId = auth.currentUser ? auth.currentUser.uid : null;
+
   const signout = () => {
     auth
       .signOut()
@@ -13,22 +22,38 @@ const MyImage = () => {
         console.error("Error signing out: ", error);
       });
   };
-
-  const [userEmail, setUserEmail] = useState("");
-  const [username,setUsername]=useState(" ");
-
+  
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        setUserEmail(user.email);
-      } else {
-        setUserEmail("");
-      }
-    });
-    return () => unsubscribe();
+    const handleScroll = () => {
+      setIsScrolledUp((prevScrollState) => {
+        // If the page is scrolled up, hide the signout button
+        return window.scrollY < prevScrollState ? true : false;
+      });
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
- 
+  useEffect(() => {
+    if (userId) {
+      const unsubscribe = onSnapshot(collection(db, "UserProfile"), (snapshot) => {
+        const userDataArray = [];
+        snapshot.forEach((doc) => {
+          const data = { id: doc.id, ...doc.data() };
+          if (data.id === userId) {
+            userDataArray.push(data);
+          }
+        });
+        setUserData(userDataArray);
+        setLoading(false);
+      });
+
+      return () => unsubscribe(); 
+    }
+  }, [userId]);
+
   return (
     <div
       className="Dashboard"
@@ -37,7 +62,7 @@ const MyImage = () => {
         width: "100vw",
         height: "100vh",
         display: "flex",
-        flexDirection: "row",
+        flexDirection: "column",
       }}
     >
       <div
@@ -61,19 +86,23 @@ const MyImage = () => {
           <h2>Gerrit</h2>
         </div>
       </div>
-      <div className="DetailsTab">
-        <div className="Details">
-          <h2>Details :John Doe</h2>
-          <p>Username: {username}</p>
-          <p>Email:{userEmail} </p>
-        </div>
+
+      <div className="DetailsTab" style={{ flex: 1, overflowY: "auto" }}>
+        {loading ? (
+          <p>Loading...</p>
+        ) : 
+        
+        <Home/>
+        }
       </div>
-      <button
-        onClick={signout}
-        style={{ position: "absolute", top: 20, right: 20 }}
-      >
-        Logout
-      </button>
+      {!isScrolledUp && (
+          <button
+            onClick={signout}
+            style={{ position: "absolute", top: 20, right: 20 }}
+          >
+            Logout
+          </button>
+        )}
     </div>
   );
 };

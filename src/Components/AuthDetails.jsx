@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { auth } from "../firebaseconfig";
 import Login from "./Login";
-import Home from "./Home";
 import secureit from "../Assets/scureit.jpeg";
 import Signup from "./Signup";
 import MyImage from "./MyImage";
