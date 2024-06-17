@@ -4,6 +4,7 @@ import { db } from "../firebaseconfig";
 import { getAuth } from "firebase/auth";
 import { collection, onSnapshot } from "firebase/firestore";
 import Home from "./Home";
+import UserProfileList from "./AuthDetails"
 
 const MyImage = () => {
   const [isScrolledUp, setIsScrolledUp] = useState(false);
@@ -16,7 +17,7 @@ const MyImage = () => {
     auth
       .signOut()
       .then(() => {
-        console.log("User signed out");
+        // console.log("User signed out");
       })
       .catch((error) => {
         console.error("Error signing out: ", error);
@@ -83,7 +84,7 @@ const MyImage = () => {
           }}
         >
           <img src={nobg} alt="" style={{ width: "50px", height: "50px" }} />
-          <h2>Gerrit</h2>
+          <h2>DeviceGuard </h2>
         </div>
       </div>
 
@@ -91,8 +92,11 @@ const MyImage = () => {
         {loading ? (
           <p>Loading...</p>
         ) : 
-        
+        <>
         <Home/>
+        <UserProfileList/> 
+        </>
+        
         }
       </div>
       {!isScrolledUp && (

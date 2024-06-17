@@ -53,7 +53,7 @@ const Signup = () => {
         <button type="submit" style={{ width: "350px", marginBottom: "10px" }}>
           Sign up
         </button>
-        <h4>{error ? <p>{error}</p> : null}</h4>
+        <h4>{error ? <p style={{color:'red'}}>{error}</p> : null}</h4>
 
         <div>
           {user ? (

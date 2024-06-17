@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { auth } from "../firebaseconfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import Signup from "./Signup";
-import svgfile from '../Assets/undraw.svg';
+
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -14,7 +13,7 @@ const Login = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        console.log(user);
+        // console.log(user);
       })
       .catch((error) => {
         setError(error.message);
@@ -24,14 +23,6 @@ const Login = () => {
   return (
     <div
       className="signin"
-      // style={{
-      //   display: "flex",
-      //   justifyContent: "center",
-      //   alignItems: "start",
-      //   width: "100%",
-      // flexDirection:'column'
-
-      // }}
     >
       <div className="headerpart">
         <h1>Login</h1>
@@ -78,7 +69,7 @@ const Login = () => {
           </form>
     
 
-            {error ? <p style={{textDecorationColor:'red'}}>{error}</p> :<></> }
+            {error ? <p style={{color:'red'}}>{error}</p> :<></> }
     </div>
   );
 };

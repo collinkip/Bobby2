@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FaTrash } from "react-icons/fa";
+import Transfer from "./transfer";
 
 const Card = ({ user }) => {
   const [isStolen, setIsStolen] = useState(false);
@@ -18,7 +19,7 @@ const Card = ({ user }) => {
         <p>Processor: {user.Processor}</p>
         <p>Phones Model Number: {user.PhoneModel}</p>
         <div>
-          <button type="button" onClick={handleStolen} style={{ marginRight: '10px' }}>Stolen</button>
+          <button type="button" onClick={handleStolen} style={{ marginRight: '10px' }}>Stolen</button>\
           <button
             type="button"
             className="delete"
@@ -31,6 +32,7 @@ const Card = ({ user }) => {
           </button>
         </div>
       </div>
+      <Transfer/>
     </article>
   );
 };

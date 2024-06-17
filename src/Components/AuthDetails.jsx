@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { auth } from "../firebaseconfig";
 import Login from "./Login";
-import secureit from "../Assets/scureit.jpeg";
+import secureit from "../Assets/ecureit.jpg";
 import Signup from "./Signup";
 import MyImage from "./MyImage";
 import loadingg from "../Assets/loadinggiffy.gif";
@@ -46,10 +46,15 @@ const AuthDetails = () => {
         <div className="container">
           <div className="leftside">
             <div className="textarea">
-              <h1 className="heading">Turn Your Ideas into a reality</h1>
+            
+              <h1 className="heading">Transform Your Vision into Action</h1>
               <p className="subtext">
-                Start for free and get attractive offers from the community
+              
               </p>
+              <p className="subtext">
+              Unlock Your Potential and join the Community
+              </p>
+              <p className="subtext"> and Make it a safer Place.</p>
             </div>
             <img src={secureit} alt="" className="image" />
           </div>
@@ -59,9 +64,9 @@ const AuthDetails = () => {
           <div className="rightside">
             <div className="right">
               <div className="topright">
-                <h1>SecureIT</h1>
+                <h1>DeviceGuard </h1>
                 <p>
-                  SecureIT is a platform where you can share your ideas and get
+                DeviceGuard  is a platform where you can share your ideas and get
                   it implemented by the community
                 </p>
               </div>
